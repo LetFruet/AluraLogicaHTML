@@ -7,12 +7,13 @@
 //let paragrafo = document.querySelector("p");
 //paragrafo.innerHTML = "Escolha um número entre 1 e 10";
 
-let numeroSecreto = gerarNumeroAleatorio(), tentativas = 1;
+let listaNumeroSorteados = [], qtdeLimite = 10, numeroSecreto = gerarNumeroAleatorio(), tentativas = 1;
 
 //quando se tem um padrão de código, pode-se isolar o comportamento em uma função p evitar repetição de código
 function exibirTextoTela(tag, texto) {
     let campo = document.querySelector(tag);
     campo.innerHTML = texto;
+    responsiveVoice.speak(texto, "Brazilian Portuguese Female", {rate:1.2});
 }
 
 function mensagemInicial() {
@@ -46,7 +47,18 @@ function verificarChute() {
 }
 
 function gerarNumeroAleatorio() {
-    return parseInt(Math.random() * 10 + 1);
+    let numeroEscolhido = parseInt(Math.random() * qtdeLimite + 1), qtdeElementosLista = listaNumeroSorteados.length;
+
+    if (qtdeElementosLista == qtdeLimite) {
+        listaNumeroSorteados = [];
+    }
+    //verifica se o número já está incluído na função 
+    if (listaNumeroSorteados.includes(numeroEscolhido)) {
+        return gerarNumeroAleatorio();
+    } else {
+        listaNumeroSorteados.push(numeroEscolhido);
+        return numeroEscolhido;
+    }
 }
 
 function limparCampo() {
@@ -60,7 +72,9 @@ function reiniciarJogo() {
     tentativas = 1;
     mensagemInicial();
     //desabilitando o botão de "novo jogo"
-    document.getElementById("reiniciar").setAttribute("disabled", true); 
+    document.getElementById("reiniciar").setAttribute("disabled", true);
 }
 
 //quando trata-se de listas, utiliza-se colchetes
+
+//para disponibilizar o jogo a partir de um endereço, deve-se acessar o site vercel.com e realizar um Deploy a partir do GitHub
